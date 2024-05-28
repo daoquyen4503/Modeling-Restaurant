@@ -8,6 +8,30 @@ session_start();
 
 ?>
 
+<!-- Search -->
+<?php
+$title = "";
+
+include ('connection/connect.php');
+
+// get all users
+$sql = "SELECT * FROM dishes";
+
+// filter by username
+if (isset($_GET['title'])) {
+    $title = $_GET['title'];
+
+	$sql = "SELECT * FROM dishes WHERE title LIKE '$title%' OR title LIKE '%$title' ";
+}
+
+$result = mysqli_query($db, $sql);
+$dishes = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+// free memory
+mysqli_free_result($result);
+?>
+
+	
 
 <head>
     <meta charset="utf-8">
@@ -22,6 +46,19 @@ session_start();
     <link href="css/animsition.min.css" rel="stylesheet">
     <link href="css/animate.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <style>
+        header .container{
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .search-container input[type="text"] {
+            padding: 5px 10px;
+            border-radius: 10px;
+            width: 300px;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+    </style>
 </head>
 
 
@@ -34,7 +71,13 @@ session_start();
             <div class="container">
                 <button class="navbar-toggler hidden-lg-up" type="button" data-toggle="collapse" data-target="#mainNavbarCollapse">&#9776;</button>
                 <a class="navbar-brand" href="index.php"> <img class="img-rounded" src="images/logo.png" alt="" width="18%"> </a>
-                <div class="collapse navbar-toggleable-md  float-lg-right" id="mainNavbarCollapse">
+                
+		<!-- search bar -->
+                <form class="search-container" action="search_page.php" method="get">
+                    <input type="text" placeholder="Search here.." name="title" value="<?php echo $title; ?>">
+                </form>        
+		    
+		<div class="collapse navbar-toggleable-md  float-lg-right" id="mainNavbarCollapse">
                     <ul class="nav navbar-nav">
                         <li class="nav-item"> <a class="nav-link active" href="index.php">Home <span class="sr-only">(current)</span></a> </li>
                         <li class="nav-item"> <a class="nav-link active" href="restaurants.php">Category <span class="sr-only"></span></a> </li>
@@ -126,7 +169,7 @@ session_start();
                 
 
                 <?php 					
-						$query= mysqli_query($db,"select * from dishes LIMIT 6"); 
+				$query= mysqli_query($db,"select * from dishes LIMIT 6"); 
                                 while($row=mysqli_fetch_array($query))
                                 {
                                         
