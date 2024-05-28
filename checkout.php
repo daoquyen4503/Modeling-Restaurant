@@ -46,6 +46,7 @@ else{
 														
 													}
 												}
+                                                
 ?>
 
 
@@ -62,9 +63,61 @@ else{
     <link href="css/animsition.min.css" rel="stylesheet">
     <link href="css/animate.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+
+    <!-- js script -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        function togglePaymentForm() {
+            var selectedPaymentMethod = document.querySelector('input[name="mod"]:checked').value;
+            var cardForm = document.getElementById('card-form');
+            if (selectedPaymentMethod === 'card') {
+                cardForm.style.display = 'block';
+            } else {
+                cardForm.style.display = 'none';
+            }
+        }
+    </script>
+
+    <style>
+            .payment-form {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-family: Arial, sans-serif;
+        }
+
+        .payment-form .form-group {
+            margin-bottom: 15px;
+        }
+
+        .payment-form label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .payment-form .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+
+    </style>
 </head>
 
 <body>
+    <!--  Author Name: MH RONY.
+                        GigHub Link: https://github.com/dev-mhrony
+                        Facebook Link:https://www.facebook.com/dev.mhrony
+                        Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
+                        for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com  
+                        Visit My Website : developerrony.com -->
     <div class="site-wrapper">
         <header id="header" class="header-scroll top-header headrom">
             <nav class="navbar navbar-dark">
@@ -86,12 +139,17 @@ else{
 							{
 									
 									
-										echo  '<li class="nav-item"><a href="your_orders.php" class="nav-link active">My Orders</a> </li>';
+									echo  '<li class="nav-item"><a href="your_orders.php" class="nav-link active">My Orders</a> </li>';
 									echo  '<li class="nav-item"><a href="logout.php" class="nav-link active">Logout</a> </li>';
 							}
 
 						?>
-                
+                            <!--  Author Name: MH RONY.
+                        GigHub Link: https://github.com/dev-mhrony
+                        Facebook Link:https://www.facebook.com/dev.mhrony
+                        Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
+                        for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com  
+                        Visit My Website : developerrony.com -->
                         </ul>
                     </div>
                 </div>
@@ -118,7 +176,12 @@ else{
             </div>
 
 
-
+            <!--  Author Name: MH RONY.
+                        GigHub Link: https://github.com/dev-mhrony
+                        Facebook Link:https://www.facebook.com/dev.mhrony
+                        Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
+                        for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com  
+                        Visit My Website : developerrony.com -->
 
             <div class="container m-t-30">
                 <form action="" method="post">
@@ -138,7 +201,12 @@ else{
                                                 <table class="table">
                                                     <tbody>
 
-                                            
+                                                        <!--  Author Name: MH RONY.
+                        GigHub Link: https://github.com/dev-mhrony
+                        Facebook Link:https://www.facebook.com/dev.mhrony
+                        Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
+                        for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com  
+                        Visit My Website : developerrony.com -->
 
                                                         <tr>
                                                             <td>Cart Subtotal</td>
@@ -154,13 +222,140 @@ else{
                                                         </tr>
                                                     </tbody>
 
-                                        
+                                                    <!--  Author Name: MH RONY.
+                        GigHub Link: https://github.com/dev-mhrony
+                        Facebook Link:https://www.facebook.com/dev.mhrony
+                        Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
+                        for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com  
+                        Visit My Website : developerrony.com -->
 
 
                                                 </table>
                                             </div>
                                         </div>
                                         <div class="payment-option">
+                                        <form id="payment-form" action="process_payment.php" method="POST">
+                                            <ul class="list-unstyled">
+                                                <li>
+                                                    <label class="custom-control custom-radio m-b-20">
+                                                        <input name="mod" id="radioStacked1" checked value="COD" type="radio" class="custom-control-input" onclick="togglePaymentForm()"> 
+                                                        <span class="custom-control-indicator"></span> 
+                                                        <span class="custom-control-description">Cash on Delivery</span>
+                                                    </label>
+                                                </li>
+                                                <li>
+                                                    <label class="custom-control custom-radio m-b-10">
+                                                        <input name="mod" type="radio" value="card" class="custom-control-input" onclick="togglePaymentForm()"> 
+                                                        <span class="custom-control-indicator"></span> 
+                                                        <span class="custom-control-description">ATM/ Internet Banking</span> 
+                                                    </label>
+                                                </li>
+                                            </ul>
+
+                                            <div id="card-form" style="display: none;">
+                                                <div class="form-group">
+                                                    <label for="card-holder">Card Holder Name</label>
+                                                    <input type="text" id="card-holder" style="text-transform: uppercase;" name="card_holder" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="card-number">Card Number</label>
+                                                    <input type="text" id="card-number" name="card_number" maxlength="19" class="form-control" oninput="formatCardNumber(this)" placeholder="Enter card number">
+                                                    <script>
+                                                        function formatCardNumber(input) {
+                                                            let cardNumber = input.value.replace(/\D/g, '');
+                                                            cardNumber = cardNumber.replace(/(\d{4})(?=\d)/g, '$1 ');
+                                                            input.value = cardNumber;
+                                                        }
+                                                    </script>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="expiry-date">Expiry Date</label>
+                                                    <input type="month" id="expiry-date" name="expiry_date" class="form-control" placeholder="MM/YY">
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <p class="text-xs-center">
+                                            <input type="submit" onclick="return confirm('Do you want to confirm the order?');" name="submit" class="btn btn-success btn-block" value="Order Now">
+                                        </p>
+
+                                        <script>
+                                            function togglePaymentForm() {
+                                                const cardForm = document.getElementById('card-form');
+                                                const isCardSelected = document.querySelector('input[name="mod"]:checked').value === 'card';
+                                                
+                                                if (isCardSelected) {
+                                                    cardForm.style.display = 'block';
+                                                    document.getElementById('card-holder').setAttribute('required', 'required');
+                                                    document.getElementById('card-number').setAttribute('required', 'required');
+                                                    document.getElementById('expiry-date').setAttribute('required', 'required');
+                                                } else {
+                                                    cardForm.style.display = 'none';
+                                                    document.getElementById('card-holder').removeAttribute('required');
+                                                    document.getElementById('card-number').removeAttribute('required');
+                                                    document.getElementById('expiry-date').removeAttribute('required');
+                                                }
+                                            }
+
+                                            // Gọi hàm togglePaymentForm() khi tải trang để đặt đúng trạng thái ban đầu
+                                            window.onload = togglePaymentForm;
+                                        </script>
+
+                                        </div>
+
+                                        <script>
+                                            var stripe = Stripe('your_stripe_public_key'); // Khóa công khai từ Stripe
+                                            var elements = stripe.elements();
+
+                                            var style = {
+                                                base: {
+                                                    color: '#32325d',
+                                                    fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                                                    fontSmoothing: 'antialiased',
+                                                    fontSize: '16px',
+                                                    '::placeholder': {
+                                                        color: '#aab7c4'
+                                                    }
+                                                },
+                                                invalid: {
+                                                    color: '#fa755a',
+                                                    iconColor: '#fa755a'
+                                                }
+                                            };
+
+                                            var card = elements.create('card', {style: style});
+                                            card.mount('#card-element');
+
+                                            var form = document.getElementById('payment-form');
+
+                                            form.addEventListener('submit', function(event) {
+                                                var selectedPaymentMethod = document.querySelector('input[name="mod"]:checked').value;
+                                                if (selectedPaymentMethod === 'card') {
+                                                    event.preventDefault();
+
+                                                    stripe.createToken(card).then(function(result) {
+                                                        if (result.error) {
+                                                            console.log(result.error.message);
+                                                        } else {
+                                                            var hiddenInput = document.createElement('input');
+                                                            hiddenInput.setAttribute('type', 'hidden');
+                                                            hiddenInput.setAttribute('name', 'stripeToken');
+                                                            hiddenInput.setAttribute('value', result.token.id);
+                                                            form.appendChild(hiddenInput);
+
+                                                            form.submit();
+                                                        }
+                                                    });
+                                                }
+                                            });
+
+                                            togglePaymentForm(); // Đảm bảo form thanh toán thẻ ẩn khi tải trang
+                                        </script>
+
+
+
+
+
+                                        <!-- <div class="payment-option">
                                             <ul class=" list-unstyled">
                                                 <li>
                                                     <label class="custom-control custom-radio  m-b-20">
@@ -169,11 +364,12 @@ else{
                                                 </li>
                                                 <li>
                                                     <label class="custom-control custom-radio  m-b-10">
-                                                        <input name="mod" type="radio" value="paypal" disabled class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">Paypal <img src="images/paypal.jpg" alt="" width="90"></span> </label>
+                                                        <input name="mod" type="radio" value="paypal" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">Paypal <img src="images/paypal.jpg" alt="" width="90"></span> 
+                                                    </label>
                                                 </li>
                                             </ul>
                                             <p class="text-xs-center"> <input type="submit" onclick="return confirm('Do you want to confirm the order?');" name="submit" class="btn btn-success btn-block" value="Order Now"> </p>
-                                        </div>
+                                        </div> -->
                             </form>
                         </div>
                     </div>
