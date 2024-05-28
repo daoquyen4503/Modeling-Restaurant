@@ -9,10 +9,10 @@
 
       */
 //main connection file for both admin & front end
-$servername = "localhost"; //server
+$servername = "localhost:3307"; //server
 $username = "root"; //username
 $password = ""; //password
-$dbname = "code_camp_bd_fos";  //database
+$dbname = "fos_dbnew";  //database
 
 // Create connection
 $db = mysqli_connect($servername, $username, $password, $dbname); // connecting 

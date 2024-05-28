@@ -1,130 +1,59 @@
-                <!-- /*!
-* Author Name: MH RONY.
-* GigHub Link: https://github.com/dev-mhrony
-* Facebook Link:https://www.facebook.com/dev.mhrony
-* Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
-for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com
-* Visit My Website : developerrony.com
-
-*/ -->
-                <!DOCTYPE html>
+         <!DOCTYPE html>
                 <html lang="en">
                 <?php
 include("../connection/connect.php");
 error_reporting(0);
 session_start();
 
-
-
-
 if(isset($_POST['submit']))          
-{
-	
-			
-		
-			
-		  
-		
-		
-		if(empty($_POST['c_name'])||empty($_POST['res_name'])||$_POST['email']==''||$_POST['phone']==''||$_POST['url']==''||$_POST['o_hr']==''||$_POST['c_hr']==''||$_POST['o_days']==''||$_POST['address']=='')
-		{	
-											$error = 	'<div class="alert alert-danger alert-dismissible fade show">
-																<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-																<strong>All fields Must be Fillup!</strong>
-															</div>';
-									
-		
-								
-		}
-	else
-		{
-		
-				$fname = $_FILES['file']['name'];
-								$temp = $_FILES['file']['tmp_name'];
-								$fsize = $_FILES['file']['size'];
-								$extension = explode('.',$fname);
-								$extension = strtolower(end($extension));  
-								$fnew = uniqid().'.'.$extension;
-   
-								$store = "Res_img/".basename($fnew);                      
-	
-					if($extension == 'jpg'||$extension == 'png'||$extension == 'gif' )
-					{        
-									if($fsize>=1000000)
-										{
-		
-		
-												$error = 	'<div class="alert alert-danger alert-dismissible fade show">
-																<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-																<strong>Max Image Size is 1024kb!</strong> Try different Image.
-															</div>';
-	   
-										}
-		
-									else
-										{
-												
-												
-												$res_name=$_POST['res_name'];
-				                                 
-												$sql = "INSERT INTO restaurant(c_id,title,email,phone,url,o_hr,c_hr,o_days,address,image) VALUE('".$_POST['c_name']."','".$res_name."','".$_POST['email']."','".$_POST['phone']."','".$_POST['url']."','".$_POST['o_hr']."','".$_POST['c_hr']."','".$_POST['o_days']."','".$_POST['address']."','".$fnew."')";  // store the submited data ino the database :images
-												mysqli_query($db, $sql); 
-												move_uploaded_file($temp, $store);
-			  
-													$success = 	'<div class="alert alert-success alert-dismissible fade show">
-																<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-																 New Restaurant Added Successfully.
-															</div>';
-                
-	
-										}
-					}
-					elseif($extension == '')
-					{
-						$error = 	'<div class="alert alert-danger alert-dismissible fade show">
-																<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-																<strong>select image</strong>
-															</div>';
-					}
-					else{
-					
-											$error = 	'<div class="alert alert-danger alert-dismissible fade show">
-																<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-																<strong>invalid extension!</strong>png, jpg, Gif are accepted.
-															</div>';
-						
-	   
-						}               
-	   
-	   
-	   }
+{	
+    if(empty($_POST['c_name']) || empty($_POST['c_des']) || empty($_FILES['image'])) {
+        $error = 	'<div class="alert alert-danger alert-dismissible fade show">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>All fields must be filled!</strong>
+                    </div>';
+    } else {
+        $fname = $_FILES['image']['name'];
+        $temp = $_FILES['image']['tmp_name'];
+        $fsize = $_FILES['image']['size'];
+        $extension = explode('.',$fname);
+        $extension = strtolower(end($extension));  
+        $fnew = uniqid().'.'.$extension;
 
+        $store = "Res_img/".basename($fnew);                      
 
+        if($extension == 'jpg' || $extension == 'png' || $extension == 'gif' ) {        
+            if($fsize >= 1000000) {
+                $error = 	'<div class="alert alert-danger alert-dismissible fade show">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <strong>Max Image Size is 1024kb!</strong> Try a different image.
+                            </div>';
+            } else {
+                $c_name = $_POST['c_name'];
 
-	
-	
-	
+                $sql = "INSERT INTO category (c_name, c_des, image) VALUES ('".$c_name."', '".$_POST['c_des']."', '".$fnew."')";
+                mysqli_query($db, $sql); 
+                move_uploaded_file($temp, $store);
 
+                $success = 	'<div class="alert alert-success alert-dismissible fade show">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                New Restaurant Added Successfully.
+                            </div>';
+            }
+        } elseif($extension == '') {
+            $error = 	'<div class="alert alert-danger alert-dismissible fade show">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <strong>Select image</strong>
+                        </div>';
+        } else {
+            $error = 	'<div class="alert alert-danger alert-dismissible fade show">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <strong>Invalid extension!</strong> PNG, JPG, GIF are accepted.
+                        </div>';
+        }               
+    }
 }
-
-
-
-
-
-
-
-
-?>
-                <!-- /*!
-* Author Name: MH RONY.
-* GigHub Link: https://github.com/dev-mhrony
-* Facebook Link:https://www.facebook.com/dev.mhrony
-* Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
-for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com
-* Visit My Website : developerrony.com
-
-*/ -->
-
+ ?>
                 <head>
                     <meta charset="utf-8">
                     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -153,26 +82,13 @@ for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@
                                 <div class="navbar-header">
                                     <a class="navbar-brand" href="dashboard.php">
 
-                                        <span><img src="images/icn.png" alt="homepage" class="dark-logo" /></span>
+                                    <span><img src="images/icn1.PNG" alt="homepage" class="dark-logo" width="150px" height="40px" /></span>
                                     </a>
                                 </div>
                                 <div class="navbar-collapse">
 
                                     <ul class="navbar-nav mr-auto mt-md-0">
-
-
-                                        <!-- /*!
-* Author Name: MH RONY.
-* GigHub Link: https://github.com/dev-mhrony
-* Facebook Link:https://www.facebook.com/dev.mhrony
-* Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
-for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com
-* Visit My Website : developerrony.com
-
-*/ -->
-
-
-                                    </ul>
+                          </ul>
 
                                     <ul class="navbar-nav my-lg-0">
 
@@ -193,17 +109,6 @@ for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@
                                             </div>
                                         </li>
 
-                                        <!-- /*!
-* Author Name: MH RONY.
-* GigHub Link: https://github.com/dev-mhrony
-* Facebook Link:https://www.facebook.com/dev.mhrony
-* Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
-for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com
-* Visit My Website : developerrony.com
-
-*/ -->
-
-
                                         <li class="nav-item dropdown">
                                             <a class="nav-link dropdown-toggle text-muted  " href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="images/bookingSystem/user-icn.png" alt="user" class="profile-pic" /></a>
                                             <div class="dropdown-menu dropdown-menu-right animated zoomIn">
@@ -218,16 +123,6 @@ for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@
                         </div>
 
                         <div class="left-sidebar">
-                            <!-- /*!
-* Author Name: MH RONY.
-* GigHub Link: https://github.com/dev-mhrony
-* Facebook Link:https://www.facebook.com/dev.mhrony
-* Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
-for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com
-* Visit My Website : developerrony.com
-
-*/ -->
-
                             <div class="scroll-sidebar">
 
                                 <nav class="sidebar-nav">
@@ -237,21 +132,10 @@ for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@
                                         <li> <a href="dashboard.php"><i class="fa fa-tachometer"></i><span>Dashboard</span></a></li>
                                         <li class="nav-label">Log</li>
                                         <li> <a href="all_users.php"> <span><i class="fa fa-user f-s-20 "></i></span><span>Users</span></a></li>
-                                        <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-archive f-s-20 color-warning"></i><span class="hide-menu">Restaurant</span></a>
+                                        <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-archive f-s-20 color-warning"></i><span class="hide-menu">Categories</span></a>
                                             <ul aria-expanded="false" class="collapse">
-                                                <li><a href="all_restaurant.php">All Restaurants</a></li>
-                                                <li><a href="add_category.php">Add Category</a></li>
-                                                <li><a href="add_restaurant.php">Add Restaurant</a></li>
-                                                <!-- /*!
-* Author Name: MH RONY.
-* GigHub Link: https://github.com/dev-mhrony
-* Facebook Link:https://www.facebook.com/dev.mhrony
-* Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
-for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com
-* Visit My Website : developerrony.com
-
-*/ -->
-
+                                                <li><a href="all_restaurant.php">All Category</a></li>                                      
+                                                <li><a href="add_restaurant.php">Add Category</a></li>
                                             </ul>
                                         </li>
                                         <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-cutlery" aria-hidden="true"></i><span class="hide-menu">Menu</span></a>
@@ -268,57 +152,20 @@ for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@
                                 </nav>
 
                             </div>
-                            <!-- /*!
-* Author Name: MH RONY.
-* GigHub Link: https://github.com/dev-mhrony
-* Facebook Link:https://www.facebook.com/dev.mhrony
-* Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
-for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com
-* Visit My Website : developerrony.com
-
-*/ -->
-
                         </div>
 
                         <div class="page-wrapper">
-                            <div style="padding-top: 10px;">
-                                <marquee onMouseOver="this.stop()" onMouseOut="this.start()"> <a href="https://www.youtube.com/@codecampbdofficial">Code Camp BD</a> is the sole owner of this script. It is not suitable for personal use. And releasing it in demo version. Besides, it is being provided for free only from <a href="https://www.youtube.com/@codecampbdofficial">Code Camp BD</a>. For any of your problems contact us on <a href="https://www.youtube.com/@codecampbdofficial">Code Camp BD</a> facebook group / page or message <a href="https://www.facebook.com/dev.mhrony">MH RONY</a> on facebook. Thanks for staying with <a href="https://www.youtube.com/@codecampbdofficial">Code Camp BD</a>.</marquee>
-                            </div>
-
-                            <!-- /*!
-* Author Name: MH RONY.
-* GigHub Link: https://github.com/dev-mhrony
-* Facebook Link:https://www.facebook.com/dev.mhrony
-* Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
-for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com
-* Visit My Website : developerrony.com
-
-*/ -->
-
-
+                      
                             <div class="container-fluid">
 
 
 
                                 <?php  echo $error;
 									        echo $success; ?>
-
-                                <!-- /*!
-* Author Name: MH RONY.
-* GigHub Link: https://github.com/dev-mhrony
-* Facebook Link:https://www.facebook.com/dev.mhrony
-* Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
-for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com
-* Visit My Website : developerrony.com
-
-*/ -->
-
-
-
                                 <div class="col-lg-12">
                                     <div class="card card-outline-primary">
                                         <div class="card-header">
-                                            <h4 class="m-b-0 text-white">Add Restaurant</h4>
+                                            <h4 class="m-b-0 text-white">Add Category</h4>
                                         </div>
                                         <div class="card-body">
                                             <form action='' method='post' enctype="multipart/form-data">
@@ -328,179 +175,27 @@ for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@
                                                     <div class="row p-t-20">
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label class="control-label">Restaurant Name</label>
-                                                                <input type="text" name="res_name" class="form-control">
+                                                                <label class="control-label">Category Name</label>
+                                                                <input type="text" name="c_name" class="form-control">
                                                             </div>
                                                         </div>
-
-                                                        <div class="col-md-6">
-                                                            <div class="form-group has-danger">
-                                                                <label class="control-label">Bussiness E-mail</label>
-                                                                <input type="text" name="email" class="form-control form-control-danger">
-                                                            </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group has-danger">
+                                                            <label class="control-label">Description</label>
+                                                                <input type="text" name="c_des" class="form-control">
                                                         </div>
-                                                        <!-- /*!
-* Author Name: MH RONY.
-* GigHub Link: https://github.com/dev-mhrony
-* Facebook Link:https://www.facebook.com/dev.mhrony
-* Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
-for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com
-* Visit My Website : developerrony.com
-
-*/ -->
-
-                                                    </div>
-
-                                                    <div class="row p-t-20">
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label class="control-label">Phone </label>
-                                                                <input type="text" name="phone" class="form-control">
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-md-6">
-                                                            <div class="form-group has-danger">
-                                                                <label class="control-label">Website URL</label>
-                                                                <input type="text" name="url" class="form-control form-control-danger">
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                    <!-- /*!
-* Author Name: MH RONY.
-* GigHub Link: https://github.com/dev-mhrony
-* Facebook Link:https://www.facebook.com/dev.mhrony
-* Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
-for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com
-* Visit My Website : developerrony.com
-
-*/ -->
-
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label class="control-label">Open Hours</label>
-                                                                <select name="o_hr" class="form-control custom-select" data-placeholder="Choose a Category">
-                                                                    <option>--Select your Hours--</option>
-                                                                    <option value="6am">6am</option>
-                                                                    <option value="7am">7am</option>
-                                                                    <option value="8am">8am</option>
-                                                                    <option value="9am">9am</option>
-                                                                    <option value="10am">10am</option>
-                                                                    <option value="11am">11am</option>
-                                                                    <option value="12pm">12pm</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <!-- /*!
-* Author Name: MH RONY.
-* GigHub Link: https://github.com/dev-mhrony
-* Facebook Link:https://www.facebook.com/dev.mhrony
-* Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
-for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com
-* Visit My Website : developerrony.com
-
-*/ -->
-
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label class="control-label">Close Hours</label>
-                                                                <select name="c_hr" class="form-control custom-select" data-placeholder="Choose a Category">
-                                                                    <option>--Select your Hours--</option>
-                                                                    <option value="3pm">3pm</option>
-                                                                    <option value="4pm">4pm</option>
-                                                                    <option value="5pm">5pm</option>
-                                                                    <option value="6pm">6pm</option>
-                                                                    <option value="7pm">7pm</option>
-                                                                    <option value="8pm">8pm</option>
-                                                                    <option value="9pm">9pm</option>
-                                                                    <option value="10pm">10pm</option>
-                                                                    <option value="11pm">11pm</option>
-                                                                    <option value="12am">12am</option>
-                                                                    <option value="1am">1am</option>
-                                                                    <option value="2am">2am</option>
-                                                                    <option value="3am">3am</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <!-- /*!
-* Author Name: MH RONY.
-* GigHub Link: https://github.com/dev-mhrony
-* Facebook Link:https://www.facebook.com/dev.mhrony
-* Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
-for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com
-* Visit My Website : developerrony.com
-
-*/ -->
-
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label class="control-label">Open Days</label>
-                                                                <select name="o_days" class="form-control custom-select" data-placeholder="Choose a Category" tabindex="1">
-                                                                    <option>--Select your Days--</option>
-                                                                    <option value="Mon-Tue">Mon-Tue</option>
-                                                                    <option value="Mon-Wed">Mon-Wed</option>
-                                                                    <option value="Mon-Thu">Mon-Thu</option>
-                                                                    <option value="Mon-Fri">Mon-Fri</option>
-                                                                    <option value="Mon-Sat">Mon-Sat</option>
-                                                                    <option value="24hr-x7">24hr-x7</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-
-
+                                                    </div>    
                                                         <div class="col-md-6">
                                                             <div class="form-group has-danger">
                                                                 <label class="control-label">Image</label>
-                                                                <input type="file" name="file" id="lastName" class="form-control form-control-danger" placeholder="12n">
+                                                                <input type="file" name="image" class="form-control form-control-danger">
                                                             </div>
                                                         </div>
 
-
-                                                        <!-- /*!
-* Author Name: MH RONY.
-* GigHub Link: https://github.com/dev-mhrony
-* Facebook Link:https://www.facebook.com/dev.mhrony
-* Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
-for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com
-* Visit My Website : developerrony.com
-
-*/ -->
-
-
-                                                        <div class="col-md-12">
-                                                            <div class="form-group">
-                                                                <label class="control-label">Select Category</label>
-                                                                <select name="c_name" class="form-control custom-select" data-placeholder="Choose a Category" tabindex="1">
-                                                                    <option>--Select Category--</option>
-                                                                    <?php $ssql ="select * from res_category";
-													$res=mysqli_query($db, $ssql); 
-													while($row=mysqli_fetch_array($res))  
-													{
-                                                       echo' <option value="'.$row['c_id'].'">'.$row['c_name'].'</option>';;
-													}  
-                                                 
-													?>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-
-
-
+                                                        
                                                     </div>
 
-                                                    <h3 class="box-title m-t-40">Restaurant Address</h3>
-                                                    <hr>
-                                                    <div class="row">
-                                                        <div class="col-md-12 ">
-                                                            <div class="form-group">
-
-                                                                <textarea name="address" type="text" style="height:100px;" class="form-control"></textarea>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
+                                        
 
                                                 </div>
                                         </div>
@@ -518,16 +213,6 @@ for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@
                     </div>
 
                     </div>
-                    <!-- /*!
-* Author Name: MH RONY.
-* GigHub Link: https://github.com/dev-mhrony
-* Facebook Link:https://www.facebook.com/dev.mhrony
-* Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
-for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com
-* Visit My Website : developerrony.com
-
-*/ -->
-
                     </div>
 
                     <script src="js/lib/jquery/jquery.min.js"></script>
@@ -541,12 +226,3 @@ for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@
                 </body>
 
                 </html>
-                <!-- /*!
-* Author Name: MH RONY.
-* GigHub Link: https://github.com/dev-mhrony
-* Facebook Link:https://www.facebook.com/dev.mhrony
-* Youtube Link: https://www.youtube.com/channel/UChYhUxkwDNialcxj-OFRcDw
-for any PHP, Laravel, Python, Dart, Flutter work contact me at developer.mhrony@gmail.com
-* Visit My Website : developerrony.com
-
-*/ -->
